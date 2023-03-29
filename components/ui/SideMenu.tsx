@@ -28,7 +28,7 @@ import {
 export const SideMenu = () => {
   return (
     <Drawer
-      open={true}
+      open={false}
       anchor="right"
       sx={{ backdropFilter: "blur(4px)", transition: "all 0.5s ease-out" }}
     >
@@ -37,7 +37,7 @@ export const SideMenu = () => {
           <ListItem>
             <Input
               type="text"
-              placeholder="Buscar..."
+              placeholder="Search..."
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton aria-label="toggle password visibility">
