@@ -1,4 +1,3 @@
-import { ShopLayout } from "@/components/layouts";
 import {
   Box,
   Button,
@@ -9,6 +8,9 @@ import {
   Typography,
 } from "@mui/material";
 
+import { CartList } from "@/components/cart";
+import { ShopLayout } from "@/components/layouts";
+
 const CartPage = () => {
   return (
     <ShopLayout title="Shopping Cart - 3" pageDescription="Shopping cart">
@@ -17,7 +19,9 @@ const CartPage = () => {
       </Typography>
 
       <Grid container>
-        <Grid item xs={12} sm={7}></Grid>
+        <Grid item xs={12} sm={7}>
+          <CartList />
+        </Grid>
         <Grid item xs={12} sm={5}>
           <Card className="summary-card">
             <CardContent>
