@@ -1,3 +1,5 @@
+import { FC } from "react";
+
 import {
   Button,
   CardActionArea,
@@ -17,7 +19,12 @@ const productsInCart = [
   initialData.products[1],
   initialData.products[2],
 ];
-export const CartList = () => {
+
+interface Props {
+  editable?: boolean;
+}
+
+export const CartList: FC<Props> = ({ editable = false }) => {
   return (
     <>
       {productsInCart.map((product) => (
@@ -38,9 +45,17 @@ export const CartList = () => {
           <Grid item xs={7}>
             <Box display="flex" flexDirection="column">
               <Typography variant="body1">{product.title}</Typography>
-              <Typography variant="body1">Size:</Typography>
+              <Typography variant="body1">
+                Size: <strong>M</strong>
+              </Typography>
 
-              <ItemCounter />
+              {editable ? (
+                <ItemCounter />
+              ) : (
+                <Typography variant="h6" component="p">
+                  3 items
+                </Typography>
+              )}
             </Box>
           </Grid>
           <Grid
@@ -52,9 +67,11 @@ export const CartList = () => {
           >
             <Typography variant="subtitle1">${product.price}</Typography>
 
-            <Button variant="text" color="secondary">
-              Remove
-            </Button>
+            {editable && (
+              <Button variant="text" color="secondary">
+                Remove
+              </Button>
+            )}
           </Grid>
         </Grid>
       ))}
