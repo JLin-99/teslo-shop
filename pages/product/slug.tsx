@@ -1,5 +1,6 @@
 import { ShopLayout } from "@/components/layouts";
 import { ProductSlideshow } from "@/components/products";
+import { ItemCounter } from "@/components/ui";
 import { initialData } from "@/database/products";
 import { Box, Button, Chip, Grid, Typography } from "@mui/material";
 
@@ -23,6 +24,7 @@ const ProductPage = () => {
 
             <Box sx={{ my: 2 }}>
               <Typography variant="subtitle2">Quantity</Typography>
+              <ItemCounter />
             </Box>
 
             <Button color="secondary" className="circular-btn">
