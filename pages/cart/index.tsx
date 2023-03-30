@@ -10,15 +10,16 @@ import {
 
 import { CartList } from "@/components/cart";
 import { ShopLayout } from "@/components/layouts";
+import { OrderSummary } from "@/components/cart/OrderSummary";
 
 const CartPage = () => {
   return (
     <ShopLayout title="Shopping Cart - 3" pageDescription="Shopping cart">
-      <Typography variant="h1" component="h1">
+      <Typography variant="h1" component="h1" marginBottom={4}>
         Shopping Cart
       </Typography>
 
-      <Grid container>
+      <Grid container spacing={4}>
         <Grid item xs={12} sm={7}>
           <CartList />
         </Grid>
@@ -27,6 +28,7 @@ const CartPage = () => {
             <CardContent>
               <Typography variant="h2">Order</Typography>
               <Divider sx={{ my: 1 }} />
+              <OrderSummary />
 
               <Box sx={{ mt: 3 }}>
                 <Button color="secondary" className="circular-btn" fullWidth>
