@@ -1,10 +1,13 @@
 import { Typography } from "@mui/material";
 
 import { ShopLayout } from "@/components/layouts";
-import { initialData } from "@/database/products";
 import { ProductList } from "@/components/products";
+import { useProducts } from "@/hooks";
+import FullScreenLoading from "@/components/ui/FullScreenLoading";
 
 export default function HomePage() {
+  const { products, isLoading } = useProducts("/products");
+
   return (
     <ShopLayout
       title={"TesloShop - Home"}
@@ -17,7 +20,7 @@ export default function HomePage() {
         All Products
       </Typography>
 
-      <ProductList products={initialData.products as any} />
+      {isLoading ? <FullScreenLoading /> : <ProductList products={products} />}
     </ShopLayout>
   );
 }
