@@ -6,7 +6,7 @@ import { IProduct } from "@/interfaces";
 
 type Data = { message: string } | IProduct[];
 
-export default async function handler(
+export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
@@ -19,8 +19,6 @@ export default async function handler(
         message: "Bad request",
       });
   }
-
-  res.status(200).json({ message: "Example" });
 }
 
 const getProducts = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
