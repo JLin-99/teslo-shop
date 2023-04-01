@@ -1,3 +1,7 @@
+import { useContext } from "react";
+
+import { useRouter } from "next/router";
+
 import {
   Box,
   Divider,
@@ -24,11 +28,22 @@ import {
   SearchOutlined,
   VpnKeyOutlined,
 } from "@mui/icons-material";
+import { UIContext } from "@/context";
 
 export const SideMenu = () => {
+  const { isMenuOpen, toggleSideMenu } = useContext(UIContext);
+
+  const router = useRouter();
+
+  const navigateTo = (url: string) => {
+    toggleSideMenu();
+    router.push(url);
+  };
+
   return (
     <Drawer
-      open={false}
+      open={isMenuOpen}
+      onClose={toggleSideMenu}
       anchor="right"
       sx={{ backdropFilter: "blur(4px)", transition: "all 0.5s ease-out" }}
     >
@@ -62,25 +77,34 @@ export const SideMenu = () => {
             <ListItemText primary={"Mis Ordenes"} />
           </ListItemButton>
 
-          <ListItemButton sx={{ display: { xs: "", sm: "none" } }}>
+          <ListItemButton
+            sx={{ display: { xs: "", sm: "none" } }}
+            onClick={() => navigateTo("/category/men")}
+          >
             <ListItemIcon>
               <MaleOutlined />
             </ListItemIcon>
-            <ListItemText primary={"Hombres"} />
+            <ListItemText primary={"Men"} />
           </ListItemButton>
 
-          <ListItemButton sx={{ display: { xs: "", sm: "none" } }}>
+          <ListItemButton
+            sx={{ display: { xs: "", sm: "none" } }}
+            onClick={() => navigateTo("/category/women")}
+          >
             <ListItemIcon>
               <FemaleOutlined />
             </ListItemIcon>
-            <ListItemText primary={"Mujeres"} />
+            <ListItemText primary={"Women"} />
           </ListItemButton>
 
-          <ListItemButton sx={{ display: { xs: "", sm: "none" } }}>
+          <ListItemButton
+            sx={{ display: { xs: "", sm: "none" } }}
+            onClick={() => navigateTo("/category/kid")}
+          >
             <ListItemIcon>
               <EscalatorWarningOutlined />
             </ListItemIcon>
-            <ListItemText primary={"Niños"} />
+            <ListItemText primary={"Kids"} />
           </ListItemButton>
 
           <ListItemButton>

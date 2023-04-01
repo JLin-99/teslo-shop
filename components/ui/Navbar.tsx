@@ -1,3 +1,5 @@
+import { useContext } from "react";
+
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 
@@ -12,9 +14,13 @@ import {
   Badge,
 } from "@mui/material";
 import { SearchOutlined, ShoppingCartOutlined } from "@mui/icons-material";
+import { UIContext } from "@/context";
 
 export const Navbar = () => {
   const { asPath } = useRouter();
+  const { toggleSideMenu } = useContext(UIContext);
+
+  useContext;
 
   return (
     <AppBar>
@@ -46,7 +52,7 @@ export const Navbar = () => {
           <NextLink href="/category/kid" passHref legacyBehavior>
             <Link>
               <Button color={asPath === "/category/kid" ? "primary" : "info"}>
-                Kid
+                Kids
               </Button>
             </Link>
           </NextLink>
@@ -68,7 +74,7 @@ export const Navbar = () => {
           </Link>
         </NextLink>
 
-        <Button>Menu</Button>
+        <Button onClick={toggleSideMenu}>Menu</Button>
       </Toolbar>
     </AppBar>
   );
