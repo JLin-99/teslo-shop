@@ -1,18 +1,35 @@
+import { useState } from "react";
+
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
+
+import { Box, Button, Chip, Grid, Typography } from "@mui/material";
 
 import { ShopLayout } from "@/components/layouts";
 import { ProductSlideshow } from "@/components/products";
 import { SizeSelector } from "@/components/products/SizeSelector";
 import { ItemCounter } from "@/components/ui";
 import { dbProducts } from "@/database";
-import { IProduct } from "@/interfaces";
-import { Box, Button, Chip, Grid, Typography } from "@mui/material";
+import { ICartProduct, IProduct, ISize } from "@/interfaces";
 
 interface Props {
   product: IProduct;
 }
 
 const ProductPage: NextPage<Props> = ({ product }) => {
+  const [tempCartProduct, setTempCartProduct] = useState<ICartProduct>({
+    _id: product._id,
+    image: product.images[0],
+    price: product.price,
+    slug: product.slug,
+    title: product.title,
+    gender: product.gender,
+    quantity: 1,
+  });
+
+  const onSelectedSize = (size: ISize) => {
+    setTempCartProduct({ ...tempCartProduct, size });
+  };
+
   return (
     <ShopLayout title={product.title} pageDescription={product.description}>
       <Grid container spacing={3}>
@@ -31,13 +48,26 @@ const ProductPage: NextPage<Props> = ({ product }) => {
             <Box sx={{ my: 2 }}>
               <Typography variant="subtitle2">Quantity</Typography>
               <ItemCounter />
-              <SizeSelector sizes={product.sizes} />
+              <SizeSelector
+                sizes={product.sizes}
+                selectedSize={tempCartProduct.size}
+                onSelectedSize={onSelectedSize}
+              />
             </Box>
 
             {product.inStock > 0 ? (
-              <Button color="secondary" className="circular-btn">
-                Add to cart
-              </Button>
+              tempCartProduct.size ? (
+                <Button color="secondary" className="circular-btn">
+                  Add to cart
+                </Button>
+              ) : (
+                <Chip
+                  label="Choose a size"
+                  color="error"
+                  variant="outlined"
+                  sx={{ cursor: "not-allowed" }}
+                />
+              )
             ) : (
               <Chip
                 label="Out of stock"
