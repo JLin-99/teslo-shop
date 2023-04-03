@@ -1,4 +1,4 @@
-import { Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 
 import { ShopLayout } from "@/components/layouts";
 import { ProductList } from "@/components/products";
@@ -8,20 +8,34 @@ import { IProduct } from "@/interfaces";
 
 interface Props {
   products: IProduct[];
+  foundProducts: boolean;
+  query: string;
 }
 
-export default function SearchPage({ products }: Props) {
+export default function SearchPage({ products, foundProducts, query }: Props) {
   return (
     <ShopLayout
       title={"TesloShop - Search"}
       pageDescription={"Find the best products from Teslo here!"}
     >
       <Typography variant="h1" component="h1">
-        Search product
+        Search products
       </Typography>
-      <Typography variant="h2" sx={{ mb: 1 }}>
-        TODO
-      </Typography>
+
+      {foundProducts ? (
+        <Typography variant="h2" marginBottom={1} textTransform="capitalize">
+          Term: {query}
+        </Typography>
+      ) : (
+        <Box display="flex">
+          <Typography variant="h2" marginBottom={1}>
+            {"There are no products with the term"}
+          </Typography>
+          <Typography variant="h2" marginLeft={1} color="secondary">
+            {query}
+          </Typography>
+        </Box>
+      )}
 
       <ProductList products={products} />
     </ShopLayout>
@@ -41,8 +55,13 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   }
 
   let products = await dbProducts.getProductsByTerm(query);
+  const foundProducts = products.length > 0;
+
+  if (!foundProducts) {
+    products = await dbProducts.getProductsByTerm("shirt");
+  }
 
   return {
-    props: { products },
+    props: { products, foundProducts, query },
   };
 };
