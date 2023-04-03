@@ -7,6 +7,7 @@ import {
   Card,
   CardActionArea,
   CardMedia,
+  Chip,
   Grid,
   Link,
   Typography,
@@ -45,6 +46,18 @@ export const ProductCard: FC<Props> = ({ product }) => {
         >
           <Link>
             <CardActionArea>
+              {!product.inStock && (
+                <Chip
+                  color="primary"
+                  label="Out of stock"
+                  sx={{
+                    position: "absolute",
+                    zIndex: 99,
+                    top: "10px",
+                    left: "10px",
+                  }}
+                />
+              )}
               <CardMedia
                 component="img"
                 image={productImage}
