@@ -2,12 +2,15 @@ import { Typography } from "@mui/material";
 
 import { ShopLayout } from "@/components/layouts";
 import { ProductList } from "@/components/products";
-import { useProducts } from "@/hooks";
-import FullScreenLoading from "@/components/ui/FullScreenLoading";
+import { GetServerSideProps } from "next";
+import { dbProducts } from "@/database";
+import { IProduct } from "@/interfaces";
 
-export default function SearchPage() {
-  const { products, isLoading } = useProducts("/search/cyber");
+interface Props {
+  products: IProduct[];
+}
 
+export default function SearchPage({ products }: Props) {
   return (
     <ShopLayout
       title={"TesloShop - Search"}
@@ -20,7 +23,26 @@ export default function SearchPage() {
         TODO
       </Typography>
 
-      {isLoading ? <FullScreenLoading /> : <ProductList products={products} />}
+      <ProductList products={products} />
     </ShopLayout>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+  const { query = "" } = params as { query: string };
+
+  if (!query.length) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: true,
+      },
+    };
+  }
+
+  let products = await dbProducts.getProductsByTerm(query);
+
+  return {
+    props: { products },
+  };
+};
