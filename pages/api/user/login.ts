@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 
 import { User } from "@/models";
 import { db } from "@/database";
+import { jwt } from "@/utils";
 
 type Data =
   | { message: string }
@@ -46,10 +47,12 @@ async function loginUser(req: NextApiRequest, res: NextApiResponse<Data>) {
     return res.status(400).json({ message: "Invalid credentials" });
   }
 
-  const { role, name } = user;
+  const { _id, role, name } = user;
+
+  const token = jwt.signToken(_id, email);
 
   return res.status(200).json({
-    token: "",
+    token,
     user: {
       email,
       role,
