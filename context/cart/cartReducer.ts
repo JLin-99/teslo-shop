@@ -4,7 +4,8 @@ import { CartState } from "./CartProvider";
 type CartActionType =
   | { type: "[CART] - Load Cart"; payload: ICartProduct[] }
   | { type: "[CART] - Update Cart"; payload: ICartProduct[] }
-  | { type: "[CART] - Update Item Quantity"; payload: ICartProduct };
+  | { type: "[CART] - Update Item Quantity"; payload: ICartProduct }
+  | { type: "[CART] - Remove Item"; payload: ICartProduct };
 
 export const cartReducer = (
   state: CartState,
@@ -32,6 +33,18 @@ export const cartReducer = (
 
           return action.payload;
         }),
+      };
+
+    case "[CART] - Remove Item":
+      return {
+        ...state,
+        cart: state.cart.filter(
+          (product) =>
+            !(
+              product._id === action.payload._id &&
+              product.size === action.payload.size
+            )
+        ),
       };
 
     default:
