@@ -1,5 +1,7 @@
 import { FC, useContext } from "react";
 
+import NextLink from "next/link";
+
 import {
   Button,
   CardActionArea,
@@ -8,9 +10,8 @@ import {
   Link,
   Typography,
 } from "@mui/material";
-
-import NextLink from "next/link";
 import { Box } from "@mui/system";
+
 import { ItemCounter } from "../ui";
 import { CartContext } from "@/context";
 import { ICartProduct } from "@/interfaces";
