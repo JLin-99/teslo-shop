@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useContext } from "react";
 
 import {
   Button,
@@ -9,32 +9,27 @@ import {
   Typography,
 } from "@mui/material";
 
-import { initialData } from "@/database/products";
 import NextLink from "next/link";
 import { Box } from "@mui/system";
 import { ItemCounter } from "../ui";
-
-const productsInCart = [
-  initialData.products[0],
-  initialData.products[1],
-  initialData.products[2],
-];
+import { CartContext } from "@/context";
 
 interface Props {
   editable?: boolean;
 }
 
 export const CartList: FC<Props> = ({ editable = false }) => {
+  const { cart } = useContext(CartContext);
   return (
     <>
-      {productsInCart.map((product) => (
+      {cart.map((product) => (
         <Grid container spacing={2} sx={{ mb: 1 }} key={product.slug}>
           <Grid item xs={3}>
             <NextLink href="product/slug" passHref legacyBehavior>
               <Link>
                 <CardActionArea>
                   <CardMedia
-                    image={`/products/${product.images[0]}`}
+                    image={`/products/${product.image}`}
                     component="img"
                     sx={{ borderRadius: "5px" }}
                   />
@@ -46,14 +41,18 @@ export const CartList: FC<Props> = ({ editable = false }) => {
             <Box display="flex" flexDirection="column">
               <Typography variant="body1">{product.title}</Typography>
               <Typography variant="body1">
-                Size: <strong>M</strong>
+                Size: <strong>{product.size}</strong>
               </Typography>
 
               {editable ? (
-                <ItemCounter />
+                <ItemCounter
+                  currentValue={product.quantity}
+                  maxValue={10}
+                  updatedQuantity={() => {}}
+                />
               ) : (
                 <Typography variant="h6" component="p">
-                  3 items
+                  {product.quantity} {product.quantity > 1 ? "items" : "item"}
                 </Typography>
               )}
             </Box>
