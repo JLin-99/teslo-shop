@@ -13,19 +13,34 @@ import NextLink from "next/link";
 import { Box } from "@mui/system";
 import { ItemCounter } from "../ui";
 import { CartContext } from "@/context";
+import { ICartProduct } from "@/interfaces";
 
 interface Props {
   editable?: boolean;
 }
 
 export const CartList: FC<Props> = ({ editable = false }) => {
-  const { cart } = useContext(CartContext);
+  const { cart, updateItemQuantity } = useContext(CartContext);
+
+  const onNewItemQuantityValue = (
+    product: ICartProduct,
+    newQuantityValue: number
+  ) => {
+    product.quantity = newQuantityValue;
+    updateItemQuantity(product);
+  };
+
   return (
     <>
       {cart.map((product) => (
-        <Grid container spacing={2} sx={{ mb: 1 }} key={product.slug}>
+        <Grid
+          container
+          spacing={2}
+          sx={{ mb: 1 }}
+          key={product.slug + product.size}
+        >
           <Grid item xs={3}>
-            <NextLink href="product/slug" passHref legacyBehavior>
+            <NextLink href={`product/${product.slug}`} passHref legacyBehavior>
               <Link>
                 <CardActionArea>
                   <CardMedia
@@ -48,7 +63,9 @@ export const CartList: FC<Props> = ({ editable = false }) => {
                 <ItemCounter
                   currentValue={product.quantity}
                   maxValue={10}
-                  updatedQuantity={() => {}}
+                  updatedQuantity={(value) => {
+                    onNewItemQuantityValue(product, value);
+                  }}
                 />
               ) : (
                 <Typography variant="h6" component="p">
