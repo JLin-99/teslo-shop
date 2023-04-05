@@ -1,5 +1,6 @@
 import { FC, PropsWithChildren, useReducer } from "react";
 
+import axios from "axios";
 import Cookies from "js-cookie";
 
 import { AuthContext } from "./AuthContext";
@@ -36,8 +37,40 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
     }
   };
 
+  const registerUser = async (
+    name: string,
+    email: string,
+    password: string
+  ): Promise<{ hasError: boolean; message?: string }> => {
+    try {
+      const { data } = await tesloAPI.post("/user/register", {
+        name,
+        email,
+        password,
+      });
+      const { token, user } = data;
+
+      Cookies.set("token", token);
+      dispatch({ type: "[Auth] - Log In", payload: user });
+
+      return { hasError: false };
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return {
+          hasError: true,
+          message: error.response?.data.message,
+        };
+      }
+
+      return {
+        hasError: true,
+        message: "Failed to create user, please try again",
+      };
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ ...state, loginUser }}>
+    <AuthContext.Provider value={{ ...state, loginUser, registerUser }}>
       {children}
     </AuthContext.Provider>
   );
