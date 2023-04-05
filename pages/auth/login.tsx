@@ -1,10 +1,22 @@
+import { useState } from "react";
+
 import NextLink from "next/link";
 
-import { Box, Button, Grid, Link, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Chip,
+  Grid,
+  Link,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { ErrorOutline } from "@mui/icons-material";
 import { useForm } from "react-hook-form";
 
 import { AuthLayout } from "@/components/layouts";
 import { validation } from "@/utils";
+import { tesloAPI } from "@/api";
 
 type FormData = {
   email: string;
@@ -17,8 +29,22 @@ const LoginPage = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>();
+  const [showError, setShowError] = useState(false);
 
-  const onLoginUser = (data: FormData) => {};
+  const onLoginUser = async (formData: FormData) => {
+    setShowError(false);
+    try {
+      const { data } = await tesloAPI.post("/user/login", formData);
+      const { token, user } = data;
+      console.log({ token, user });
+    } catch (error) {
+      console.log("Invalid credentials");
+      setShowError(true);
+      setTimeout(() => {
+        setShowError(false);
+      }, 3000);
+    }
+  };
 
   return (
     <AuthLayout title={"Login"}>
@@ -26,9 +52,16 @@ const LoginPage = () => {
         <Box sx={{ width: 350, padding: "10px 20px" }}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Typography variant="h1" component="h1">
+              <Typography variant="h1" component="h1" marginBottom={1}>
                 Login
               </Typography>
+              <Chip
+                label="Invalid credentials"
+                color="error"
+                icon={<ErrorOutline />}
+                className="fadeIn"
+                sx={{ display: showError ? "flex" : "none" }}
+              />
             </Grid>
             <Grid item xs={12}>
               <TextField
