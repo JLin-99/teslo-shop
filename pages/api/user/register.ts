@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 
 import { User } from "@/models";
 import { db } from "@/database";
-import { jwt } from "@/utils";
+import { jwt, validation } from "@/utils";
 
 type Data =
   | { message: string }
@@ -48,6 +48,12 @@ async function registerUser(req: NextApiRequest, res: NextApiResponse<Data>) {
   if (name.length < 3 || name.length > 50) {
     return res.status(400).json({
       message: "Name must be at least 2 and a max of 50 characters long",
+    });
+  }
+
+  if (!validation.isValidEmail(email)) {
+    return res.status(400).json({
+      message: "Invalid email",
     });
   }
 
