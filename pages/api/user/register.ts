@@ -45,7 +45,7 @@ async function registerUser(req: NextApiRequest, res: NextApiResponse<Data>) {
     });
   }
 
-  if (name.length < 3 || name.length > 50) {
+  if (name.length < 2 || name.length > 50) {
     return res.status(400).json({
       message: "Name must be at least 2 and a max of 50 characters long",
     });

@@ -63,7 +63,7 @@ const RegisterPage = () => {
                 Create account
               </Typography>
               <Chip
-                label="Email already in use"
+                label={errorMessage}
                 color="error"
                 icon={<ErrorOutline />}
                 className="fadeIn"
