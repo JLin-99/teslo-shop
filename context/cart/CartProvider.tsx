@@ -1,12 +1,13 @@
 import { FC, PropsWithChildren, useEffect, useReducer } from "react";
 
-import Cookie from "js-cookie";
+import Cookies from "js-cookie";
 
 import { ICartProduct } from "@/interfaces";
 import { CartContext } from "./CartContext";
 import { cartReducer } from "./cartReducer";
 
 export interface CartState {
+  isLoaded: boolean;
   cart: ICartProduct[];
   numberOfItems: number;
   subTotal: number;
@@ -15,6 +16,7 @@ export interface CartState {
 }
 
 const CART_INITIAL_STATE: CartState = {
+  isLoaded: false,
   cart: [],
   numberOfItems: 0,
   subTotal: 0,
@@ -27,8 +29,8 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
 
   useEffect(() => {
     try {
-      const productsCookie = Cookie.get("cart")
-        ? JSON.parse(Cookie.get("cart")!)
+      const productsCookie = Cookies.get("cart")
+        ? JSON.parse(Cookies.get("cart")!)
         : [];
       dispatch({ type: "[CART] - Load Cart", payload: productsCookie });
     } catch {
@@ -37,7 +39,9 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    Cookie.set("cart", JSON.stringify(state.cart));
+    if (state.isLoaded) {
+      Cookies.set("cart", JSON.stringify(state.cart));
+    }
   }, [state.cart]);
 
   useEffect(() => {
