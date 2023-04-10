@@ -92,6 +92,15 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
   const logoutUser = () => {
     Cookies.remove("token");
     Cookies.remove("cart");
+    Cookies.remove("firstName");
+    Cookies.remove("lastName");
+    Cookies.remove("phone");
+    Cookies.remove("address");
+    Cookies.remove("address2");
+    Cookies.remove("city");
+    Cookies.remove("country");
+    Cookies.remove("state");
+    Cookies.remove("zipCode");
     router.reload();
   };
 
