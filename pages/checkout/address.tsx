@@ -142,7 +142,7 @@ const AddressPage = () => {
                 select
                 label="Country/Region"
                 variant="filled"
-                defaultValue={"US"}
+                defaultValue={Cookies.get("country") || countries[0].code}
                 {...register("country", { required: "Country is required" })}
                 error={!!errors.country}
               >
