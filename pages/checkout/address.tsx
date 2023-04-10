@@ -27,23 +27,27 @@ type FormData = {
   zipCode: string;
 };
 
+const getAddressFromCookies = (): FormData => {
+  return {
+    firstName: Cookies.get("firstName") || "",
+    lastName: Cookies.get("lastName") || "",
+    phone: Cookies.get("phone") || "",
+    address: Cookies.get("address") || "",
+    address2: Cookies.get("address2") || "",
+    city: Cookies.get("city") || "",
+    country: Cookies.get("country") || "",
+    state: Cookies.get("state") || "",
+    zipCode: Cookies.get("zipCode") || "",
+  };
+};
+
 const AddressPage = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>({
-    defaultValues: {
-      firstName: "",
-      lastName: "",
-      phone: "",
-      address: "",
-      address2: "",
-      city: "",
-      country: "US",
-      state: "",
-      zipCode: "",
-    },
+    defaultValues: getAddressFromCookies(),
   });
 
   const router = useRouter();
