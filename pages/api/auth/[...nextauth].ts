@@ -9,7 +9,7 @@ export const authOptions: NextAuthOptions = {
     Credentials({
       name: "Custom Login",
       credentials: {
-        emails: {
+        email: {
           label: "Email",
           type: "email",
           placeholder: "email@example.com",
@@ -22,7 +22,7 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         return await dbUsers.checkUserEmailPassword(
-          credentials!.emails,
+          credentials!.email,
           credentials!.password
         );
       },
@@ -33,6 +33,13 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.GITHUB_SECRET || "",
     }),
   ],
+
+  pages: {
+    signIn: "/auth/login",
+    newUser: "/auth/register",
+  },
+
+  session: { maxAge: 259200, strategy: "jwt", updateAge: 86400 },
 
   callbacks: {
     async jwt({ token, account, user }) {

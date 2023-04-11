@@ -1,6 +1,5 @@
 import { FC, PropsWithChildren, useEffect, useReducer } from "react";
 
-import { useRouter } from "next/router";
 import { useSession, signOut } from "next-auth/react";
 
 import axios from "axios";
@@ -24,7 +23,6 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, AUTH_INITIAL_STATE);
 
   const { data, status } = useSession();
-  const router = useRouter();
 
   useEffect(() => {
     if (status === "authenticated") {
