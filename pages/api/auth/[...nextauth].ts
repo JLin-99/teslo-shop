@@ -4,7 +4,6 @@ import Credentials from "next-auth/providers/credentials";
 import { dbUsers } from "@/database";
 
 export const authOptions: NextAuthOptions = {
-  // Configure one or more authentication providers
   providers: [
     Credentials({
       name: "Custom Login",

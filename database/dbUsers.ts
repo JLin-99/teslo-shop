@@ -11,7 +11,7 @@ export const checkUserEmailPassword = async (
   await db.disconnect();
 
   if (!user) return null;
-  if (bcrypt.compareSync(password, user.password!)) return null;
+  if (!bcrypt.compareSync(password, user.password!)) return null;
 
   const { role, name, _id } = user;
 
