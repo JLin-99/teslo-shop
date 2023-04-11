@@ -1,14 +1,15 @@
-import { useContext, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { GetServerSideProps } from "next";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
-import { getSession, signIn } from "next-auth/react";
+import { getProviders, getSession, signIn } from "next-auth/react";
 
 import {
   Box,
   Button,
   Chip,
+  Divider,
   Grid,
   Link,
   TextField,
@@ -19,7 +20,6 @@ import { useForm } from "react-hook-form";
 
 import { AuthLayout } from "@/components/layouts";
 import { validation } from "@/utils";
-import { AuthContext } from "@/context";
 
 type FormData = {
   email: string;
@@ -27,14 +27,19 @@ type FormData = {
 };
 
 const LoginPage = () => {
-  const { loginUser } = useContext(AuthContext);
-
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>();
   const [showError, setShowError] = useState(false);
+  const [providers, setProviders] = useState<any>({});
+
+  useEffect(() => {
+    getProviders().then((prov) => {
+      setProviders(prov);
+    });
+  }, []);
 
   const router = useRouter();
 
@@ -132,6 +137,32 @@ const LoginPage = () => {
               </NextLink>
             </Grid>
           </Grid>
+
+          <Grid
+            item
+            xs={12}
+            display="flex"
+            flexDirection="column"
+            justifyContent="end"
+          >
+            <Divider sx={{ width: "100%", mb: 2 }} />
+            {Object.values(providers)
+              .filter((provider: any) => provider.id !== "credentials")
+              .map((provider: any) => {
+                return (
+                  <Button
+                    key={provider.id}
+                    variant="outlined"
+                    fullWidth
+                    color="primary"
+                    sx={{ mb: 1 }}
+                    onClick={() => signIn(provider.id)}
+                  >
+                    {provider.name}
+                  </Button>
+                );
+              })}
+          </Grid>
         </Box>
       </form>
     </AuthLayout>
@@ -143,7 +174,6 @@ export const getServerSideProps: GetServerSideProps = async ({
   query,
 }) => {
   const session = await getSession({ req });
-  // console.log({session});
 
   const { p = "/" } = query;
 
