@@ -2,15 +2,7 @@ import { useContext } from "react";
 
 import { useRouter } from "next/router";
 
-import {
-  Box,
-  Button,
-  FormControl,
-  Grid,
-  MenuItem,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Grid, TextField, Typography } from "@mui/material";
 import { useForm } from "react-hook-form";
 import Cookies from "js-cookie";
 
@@ -137,22 +129,15 @@ const AddressPage = () => {
           </Grid>
 
           <Grid item xs={4} sm={2}>
-            <FormControl fullWidth>
-              <TextField
-                select
-                label="Country/Region"
-                variant="filled"
-                defaultValue={Cookies.get("country") || countries[0].code}
-                {...register("country", { required: "Country is required" })}
-                error={!!errors.country}
-              >
-                {countries.map((country) => (
-                  <MenuItem key={country.code} value={country.code}>
-                    {country.name}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </FormControl>
+            <TextField
+              fullWidth
+              label="Country/Region"
+              variant="filled"
+              defaultValue={Cookies.get("country") || countries[0].code}
+              {...register("country", { required: "Country is required" })}
+              error={!!errors.country}
+              helperText={errors.country?.message}
+            />
           </Grid>
           <Grid item xs={4} sm={2}>
             <TextField

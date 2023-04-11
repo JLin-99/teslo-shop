@@ -123,7 +123,13 @@ const LoginPage = () => {
               </Button>
             </Grid>
 
-            <Grid item xs={12} display="flex" justifyContent="flex-end">
+            <Grid
+              item
+              xs={12}
+              display="flex"
+              justifyContent="flex-end"
+              marginBottom={1}
+            >
               <NextLink
                 href={
                   router.query.p
