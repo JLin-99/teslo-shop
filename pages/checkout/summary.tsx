@@ -21,7 +21,7 @@ import { OrderSummary } from "@/components/cart/OrderSummary";
 import { CartContext } from "@/context";
 
 const SummaryPage = () => {
-  const { shippingAddress } = useContext(CartContext);
+  const { shippingAddress, createOrder } = useContext(CartContext);
 
   const router = useRouter();
 
@@ -30,6 +30,10 @@ const SummaryPage = () => {
       router.push("/checkout/address");
     }
   }, []);
+
+  const onCreateOrder = () => {
+    createOrder();
+  };
 
   if (!shippingAddress) return null;
 
@@ -94,7 +98,12 @@ const SummaryPage = () => {
               <OrderSummary />
 
               <Box sx={{ mt: 3 }}>
-                <Button color="secondary" className="circular-btn" fullWidth>
+                <Button
+                  color="secondary"
+                  className="circular-btn"
+                  fullWidth
+                  onClick={onCreateOrder}
+                >
                   Confirm order
                 </Button>
               </Box>
