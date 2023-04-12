@@ -28,30 +28,34 @@ interface Props {
 }
 
 const OrderPage: NextPage<Props> = ({ order }) => {
+  const { shippingAddress } = order;
   return (
     <ShopLayout title="Order" pageDescription="Order Summary">
-      <Typography variant="h1" component="h1" marginBottom={4}>
-        Order ABC123
+      <Typography variant="h1" component="h1">
+        Order {order._id}
       </Typography>
 
-      <Chip
-        sx={{ my: 2 }}
-        label="Pending payment"
-        variant="outlined"
-        color="error"
-        icon={<CreditCardOffOutlined />}
-      />
-      <Chip
-        sx={{ my: 2 }}
-        label="Paid"
-        variant="outlined"
-        color="success"
-        icon={<CreditScoreOutlined />}
-      />
+      {order.isPaid ? (
+        <Chip
+          sx={{ my: 2 }}
+          label="Paid"
+          variant="outlined"
+          color="success"
+          icon={<CreditScoreOutlined />}
+        />
+      ) : (
+        <Chip
+          sx={{ my: 2 }}
+          label="Pending payment"
+          variant="outlined"
+          color="error"
+          icon={<CreditCardOffOutlined />}
+        />
+      )}
 
       <Grid container spacing={2}>
         <Grid item xs={12} sm={7}>
-          <CartList />
+          <CartList products={order.orderItems} />
         </Grid>
         <Grid item xs={12} sm={5}>
           <Card className="summary-card">
@@ -63,38 +67,50 @@ const OrderPage: NextPage<Props> = ({ order }) => {
                 <Typography variant="subtitle1" marginBottom={1}>
                   Shipping address
                 </Typography>
-                <NextLink href="/checkout/address" passHref legacyBehavior>
-                  <Link underline="always">Edit</Link>
-                </NextLink>
               </Box>
 
-              <Typography>John Doe</Typography>
-              <Typography>False Street 123</Typography>
-              <Typography>Nix, HYA 23S</Typography>
-              <Typography>Narnia</Typography>
-              <Typography>+1 2345 1234</Typography>
+              <Typography>
+                {shippingAddress.lastName}
+                {shippingAddress.firstName
+                  ? `, ${shippingAddress.firstName}`
+                  : ""}
+              </Typography>
+              <Typography>
+                {shippingAddress.address}
+                {shippingAddress.address2
+                  ? `, ${shippingAddress.address2}`
+                  : ""}
+              </Typography>
+              <Typography>
+                {shippingAddress.city}, {shippingAddress.zipCode}
+              </Typography>
+              <Typography>{shippingAddress.country}</Typography>
+              <Typography>{shippingAddress.phone}</Typography>
 
               <Divider sx={{ my: 2 }} />
 
-              <Box display="flex" justifyContent="end" marginBottom={2}>
-                <NextLink href="/cart" passHref legacyBehavior>
-                  <Link underline="always">Edit</Link>
-                </NextLink>
-              </Box>
-
-              <OrderSummary />
+              <OrderSummary
+                orderValues={{
+                  numberOfItems: order.numberOfItems,
+                  subTotal: order.subTotal,
+                  total: order.total,
+                  tax: order.tax,
+                }}
+              />
 
               <Box sx={{ mt: 3 }}>
-                <Typography variant="h1" component="p">
-                  Pay
-                </Typography>
-                <Chip
-                  sx={{ my: 2 }}
-                  label="Paid"
-                  variant="outlined"
-                  color="success"
-                  icon={<CreditScoreOutlined />}
-                />
+                {order.isPaid ? (
+                  <Chip
+                    label="Paid"
+                    variant="outlined"
+                    color="success"
+                    icon={<CreditScoreOutlined />}
+                  />
+                ) : (
+                  <Typography variant="h1" component="p">
+                    Pay
+                  </Typography>
+                )}
               </Box>
             </CardContent>
           </Card>
