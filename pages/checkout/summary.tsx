@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import NextLink from "next/link";
 import { useRouter } from "next/router";
@@ -8,6 +8,7 @@ import {
   Button,
   Card,
   CardContent,
+  Chip,
   Divider,
   Grid,
   Link,
@@ -23,6 +24,9 @@ import { CartContext } from "@/context";
 const SummaryPage = () => {
   const { shippingAddress, createOrder } = useContext(CartContext);
 
+  const [isPostingOrder, setIsPostingOrder] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
   const router = useRouter();
 
   useEffect(() => {
@@ -31,8 +35,17 @@ const SummaryPage = () => {
     }
   }, []);
 
-  const onCreateOrder = () => {
-    createOrder();
+  const onCreateOrder = async () => {
+    setIsPostingOrder(true);
+    const { hasError, message } = await createOrder();
+
+    if (hasError) {
+      setIsPostingOrder(false);
+      setErrorMessage(message);
+      return;
+    }
+
+    router.replace(`/orders/${message}`);
   };
 
   if (!shippingAddress) return null;
@@ -97,15 +110,22 @@ const SummaryPage = () => {
 
               <OrderSummary />
 
-              <Box sx={{ mt: 3 }}>
+              <Box sx={{ mt: 3 }} display="flex" flexDirection="column">
                 <Button
                   color="secondary"
                   className="circular-btn"
                   fullWidth
                   onClick={onCreateOrder}
+                  disabled={isPostingOrder}
                 >
                   Confirm order
                 </Button>
+
+                <Chip
+                  color="error"
+                  label={errorMessage}
+                  sx={{ display: errorMessage ? "flex" : "none", mt: 2 }}
+                />
               </Box>
             </CardContent>
           </Card>
