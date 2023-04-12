@@ -123,6 +123,7 @@ const SummaryPage = () => {
 
                 <Chip
                   color="error"
+                  variant="outlined"
                   label={errorMessage}
                   sx={{ display: errorMessage ? "flex" : "none", mt: 2 }}
                 />

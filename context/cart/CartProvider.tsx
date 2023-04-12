@@ -162,6 +162,7 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
 
     try {
       const { data } = await tesloAPI.post<IOrder>("/orders", body);
+      dispatch({ type: "[CART] - Complete Order" });
       return { hasError: false, message: data._id! };
     } catch (error) {
       if (axios.isAxiosError(error)) {
