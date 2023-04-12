@@ -42,7 +42,7 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    if (Cookies.get("firstName")) {
+    if (Cookies.get("lastName")) {
       const shippingAddress = {
         firstName: Cookies.get("firstName") || "",
         lastName: Cookies.get("lastName") || "",

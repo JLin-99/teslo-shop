@@ -19,7 +19,7 @@ const orderSchema = new Schema(
     ],
 
     shippingAddress: {
-      firstName: { type: String, required: true },
+      firstName: { type: String },
       lastName: { type: String, required: true },
       address: { type: String, required: true },
       address2: { type: String },
@@ -27,7 +27,7 @@ const orderSchema = new Schema(
       state: { type: String, required: true },
       zipCode: { type: String, required: true },
       city: { type: String, required: true },
-      phone: { type: String, required: true },
+      phone: { type: String },
     },
 
     numberOfItems: { type: Number, required: true },

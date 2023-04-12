@@ -28,6 +28,13 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(url);
   }
 
+  const cart = req.cookies.get("cart");
+  if (!cart || cart.value === "[]") {
+    const url = req.nextUrl.clone();
+    url.pathname = "/cart/empty";
+    return NextResponse.redirect(url);
+  }
+
   return NextResponse.next();
 }
 
