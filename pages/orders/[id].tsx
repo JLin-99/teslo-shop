@@ -1,4 +1,3 @@
-import NextLink from "next/link";
 import { GetServerSideProps, NextPage } from "next";
 import { getSession } from "next-auth/react";
 
@@ -9,7 +8,6 @@ import {
   Chip,
   Divider,
   Grid,
-  Link,
   Typography,
 } from "@mui/material";
 import {
@@ -53,7 +51,7 @@ const OrderPage: NextPage<Props> = ({ order }) => {
         />
       )}
 
-      <Grid container spacing={2}>
+      <Grid container spacing={2} className="fadeIn">
         <Grid item xs={12} sm={7}>
           <CartList products={order.orderItems} />
         </Grid>
