@@ -1,11 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getSession } from "next-auth/react";
+import { getToken } from "next-auth/jwt";
 
 import { IOrder } from "../../../interfaces";
 import { db } from "@/database";
 import { Order, Product } from "@/models";
 import mongoose from "mongoose";
-import { getToken } from "next-auth/jwt";
 
 type Data = { message: string } | IOrder;
 

@@ -1,4 +1,6 @@
 import NextLink from "next/link";
+import { GetServerSideProps, NextPage } from "next";
+import { getSession } from "next-auth/react";
 
 import {
   Box,
@@ -18,8 +20,14 @@ import {
 import { CartList } from "@/components/cart";
 import { ShopLayout } from "@/components/layouts";
 import { OrderSummary } from "@/components/cart/OrderSummary";
+import { dbOrders } from "@/database";
+import { IOrder } from "@/interfaces";
 
-const OrderPage = () => {
+interface Props {
+  order: IOrder;
+}
+
+const OrderPage: NextPage<Props> = ({ order }) => {
   return (
     <ShopLayout title="Order" pageDescription="Order Summary">
       <Typography variant="h1" component="h1" marginBottom={4}>
@@ -95,4 +103,47 @@ const OrderPage = () => {
     </ShopLayout>
   );
 };
+
+export const getServerSideProps: GetServerSideProps = async ({
+  req,
+  query,
+}) => {
+  const { id = "" } = query;
+  const session: any = await getSession({ req });
+  if (!session) {
+    return {
+      redirect: {
+        destination: `/auth/login?p=/orders/${id}`,
+        permanent: false,
+      },
+    };
+  }
+
+  const order = await dbOrders.getOrderById(id.toString());
+
+  if (!order) {
+    return {
+      redirect: {
+        destination: "/orders/history",
+        permanent: false,
+      },
+    };
+  }
+
+  if (order.user !== session.user.id) {
+    return {
+      redirect: {
+        destination: "/orders/history",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      order,
+    },
+  };
+};
+
 export default OrderPage;
