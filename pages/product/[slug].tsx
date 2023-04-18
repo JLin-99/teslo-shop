@@ -87,7 +87,7 @@ const ProductPage: NextPage<Props> = ({ product }) => {
                 </Button>
               ) : (
                 <Chip
-                  label="Choose a size"
+                  label="Choose product size"
                   color="warning"
                   variant="outlined"
                   sx={{ cursor: "not-allowed" }}

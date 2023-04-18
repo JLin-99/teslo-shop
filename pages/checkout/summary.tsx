@@ -33,7 +33,7 @@ const SummaryPage = () => {
     if (!Cookies.get("lastName")) {
       router.push("/checkout/address");
     }
-  }, []);
+  }, [router]);
 
   const onCreateOrder = async () => {
     setIsPostingOrder(true);
