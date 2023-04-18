@@ -2,24 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 
 export async function middleware(req: NextRequest) {
-  // if (req.nextUrl.pathname.startsWith("/checkout/")) {
-  //   const token = req.cookies.get("token")?.value || "";
-
-  //   try {
-  //     await jwtVerify(
-  //       token,
-  //       new TextEncoder().encode(process.env.JWT_SECRET_SEED)
-  //     );
-  //     return NextResponse.next();
-  //   } catch (error) {
-  //     return NextResponse.redirect(
-  //       new URL(`/auth/login?p=${req.nextUrl.pathname}`, req.url)
-  //     );
-  //   }
-  // }
-
-  const session = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+  const session: any = await getToken({
+    req,
+    secret: process.env.NEXTAUTH_SECRET,
+  });
   if (!session) {
+    if (req.nextUrl.pathname.startsWith("/api/admin")) {
+      return NextResponse.redirect(new URL("/api/auth/unauthorized", req.url));
+    }
+
     const requestedPage = req.nextUrl.pathname;
     const url = req.nextUrl.clone();
     url.pathname = `/auth/login`;
@@ -28,8 +19,24 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(url);
   }
 
+  const validRoles = ["admin"];
+  if (req.nextUrl.pathname.startsWith("/admin")) {
+    if (!validRoles.includes(session.user.role)) {
+      return NextResponse.redirect(new URL("/", req.url));
+    }
+  }
+
+  if (req.nextUrl.pathname.startsWith("/api/admin")) {
+    if (!validRoles.includes(session.user.role)) {
+      return NextResponse.redirect(new URL("/api/auth/unauthorized", req.url));
+    }
+  }
+
   const cart = req.cookies.get("cart");
-  if (!cart || cart.value === "[]") {
+  if (
+    (!cart || cart.value === "[]") &&
+    req.nextUrl.pathname.startsWith("/checkout")
+  ) {
     const url = req.nextUrl.clone();
     url.pathname = "/cart/empty";
     return NextResponse.redirect(url);
@@ -39,5 +46,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/checkout/address", "/checkout/summary"],
+  matcher: ["/checkout/:path*", "/admin/:path*", "/api/admin/:path*"],
 };
