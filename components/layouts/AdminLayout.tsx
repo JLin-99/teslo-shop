@@ -32,7 +32,7 @@ export const AdminLayout: FC<PropsWithChildren<Props>> = ({
         }}
       >
         <Box display="flex" flexDirection="column">
-          <Typography variant="h1" component="h1">
+          <Typography variant="h1" component="h1" mb={1}>
             {icon} {title}
           </Typography>
           <Typography variant="h2" sx={{ mb: 1 }}>
