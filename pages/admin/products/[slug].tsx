@@ -1,5 +1,6 @@
 import { ChangeEvent, FC, useEffect, useRef, useState } from "react";
 import { GetServerSideProps } from "next";
+import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 
 import {
@@ -31,6 +32,7 @@ import { IProduct } from "@/interfaces";
 import { AdminLayout } from "@/components/layouts";
 import { dbProducts } from "@/database";
 import { Product } from "@/models";
+import { tesloAPI } from "@/api";
 
 const validTypes = ["shirts", "pants", "hoodies", "hats"];
 const validGender = ["men", "women", "kid", "unisex"];
@@ -58,6 +60,7 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
   const [newTagValue, setNewTagValue] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const router = useRouter();
 
   const {
     register,
@@ -133,6 +136,23 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
     setIsSaving(true);
 
     console.log(form);
+    try {
+      const { data } = await tesloAPI({
+        url: "/admin/products",
+        method: form._id ? "PUT" : "POST",
+        data: form,
+      });
+
+      console.log({ data });
+      if (!form._id) {
+        router.replace(`/admin/products/${form.slug}`);
+      } else {
+        setIsSaving(false);
+      }
+    } catch (error) {
+      console.log(error);
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -303,7 +323,7 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
               value={newTagValue}
               onChange={({ target }) => setNewTagValue(target.value)}
               onKeyUp={({ code }) =>
-                code === "Space" ? onNewTag() : undefined
+                code === "Space" || code === "Enter" ? onNewTag() : undefined
               }
             />
 
