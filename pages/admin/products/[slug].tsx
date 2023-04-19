@@ -119,9 +119,27 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
     setValue("tags", updatedTags, { shouldValidate: true });
   };
 
-  const onFilesSelected = async ({
-    target,
-  }: ChangeEvent<HTMLInputElement>) => {};
+  const onFilesSelected = async ({ target }: ChangeEvent<HTMLInputElement>) => {
+    if (!target.files || target.files.length === 0) {
+      return;
+    }
+
+    try {
+      for (const file of target.files) {
+        const formData = new FormData();
+        formData.append("file", file);
+        const { data } = await tesloAPI.post<{ message: string }>(
+          "/admin/upload",
+          formData
+        );
+        setValue("images", [...getValues("images"), data.message], {
+          shouldValidate: true,
+        });
+      }
+    } catch (error) {
+      console.log({ error });
+    }
+  };
 
   const onDeleteImage = (image: string) => {
     setValue(
