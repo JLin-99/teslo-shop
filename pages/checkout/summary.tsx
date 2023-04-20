@@ -20,6 +20,7 @@ import { CartList } from "@/components/cart";
 import { ShopLayout } from "@/components/layouts";
 import { OrderSummary } from "@/components/cart/OrderSummary";
 import { CartContext } from "@/context";
+import FullScreenLoading from "@/components/ui/FullScreenLoading";
 
 const SummaryPage = () => {
   const { shippingAddress, createOrder } = useContext(CartContext);
@@ -48,6 +49,7 @@ const SummaryPage = () => {
     router.replace(`/orders/${message}`);
   };
 
+  if (isPostingOrder) return <FullScreenLoading />;
   if (!shippingAddress) return null;
 
   const {
