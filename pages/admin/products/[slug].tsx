@@ -153,7 +153,6 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
     if (form.images.length < 2) return alert("Upload at least 2 images");
     setIsSaving(true);
 
-    console.log(form);
     try {
       const { data } = await tesloAPI({
         url: "/admin/products",
@@ -161,12 +160,13 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
         data: form,
       });
 
-      console.log({ data });
-      if (!form._id) {
-        router.replace(`/admin/products/${form.slug}`);
-      } else {
-        setIsSaving(false);
-      }
+      // if (!form._id) {
+      //   router.replace(`/admin/products/${form.slug}`);
+      // } else {
+      //   setIsSaving(false);
+      // }
+
+      router.replace(`/admin/products`);
     } catch (error) {
       console.log(error);
       setIsSaving(false);
@@ -397,6 +397,7 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
                 variant="outlined"
                 sx={{
                   display: getValues("images").length < 2 ? "flex" : "none",
+                  mb: 4,
                 }}
               />
 
@@ -407,7 +408,7 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
                       <CardMedia
                         component="img"
                         className="fadeIn"
-                        image={"/products/" + img}
+                        image={img}
                         alt={img}
                       />
                       <CardActions>
@@ -439,7 +440,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   if (slug === "new") {
     const tempProduct = JSON.parse(JSON.stringify(new Product()));
     delete tempProduct._id;
-    tempProduct.images = ["img1.jpg", "img2.jpg"];
+    tempProduct.images = [];
     product = tempProduct;
   } else {
     product = await dbProducts.getProductBySlug(slug.toString());

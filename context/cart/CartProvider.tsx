@@ -64,7 +64,7 @@ export const CartProvider: FC<PropsWithChildren> = ({ children }) => {
     if (state.isLoaded) {
       Cookies.set("cart", JSON.stringify(state.cart));
     }
-  }, [state.cart]);
+  }, [state.cart, state.isLoaded]);
 
   useEffect(() => {
     const numberOfItems = state.cart.reduce(
